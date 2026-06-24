@@ -27,7 +27,7 @@ case "$SHELL_TYPE" in
         ;;
     *)
         echo "ERROR: Unsupported shell. Currently only bash and zsh are supported."
-        exit 1
+        return 1
         ;;
 esac
 
@@ -40,5 +40,6 @@ else
     echo "ERROR: Could not find $SCRIPT_NAME. Please reinstall autocomplete.sh."
     exit 1
 fi
-unset _ACSH_SELF _ACSH_DIR
+unset _ACSH_SELF _ACSH_DIR SHELL_TYPE SCRIPT_NAME
+unset -f detect_shell
 

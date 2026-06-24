@@ -27,10 +27,10 @@ detect_shell() {
 SHELL_TYPE=$(detect_shell)
 case "$SHELL_TYPE" in
     zsh)
-        SCRIPT_NAME="autocomplete.zsh"
+        SCRIPT_NAME="autocomplete_zsh.sh"
         ;;
     bash)
-        SCRIPT_NAME="autocomplete.sh"
+        SCRIPT_NAME="autocomplete_bash.sh"
         ;;
     *)
         echo "ERROR: Unsupported shell. Currently only bash and zsh are supported."
@@ -38,32 +38,41 @@ case "$SHELL_TYPE" in
         ;;
 esac
 
-# The default location to install the LLMs
-INSTALL_LOCATION="$HOME/.local/bin/$SCRIPT_NAME"
-
-# Check if INSTALL_LOCATION exists, if not, set to /usr/local/bin
-if [ ! -d "$(dirname "$INSTALL_LOCATION")" ]; then
-    INSTALL_LOCATION="/usr/local/bin/$SCRIPT_NAME"
+# Determine install directory
+INSTALL_DIR="$HOME/.local/bin"
+if [ ! -d "$INSTALL_DIR" ]; then
+    INSTALL_DIR="/usr/local/bin"
 fi
 
 # Install from local file or download from GitHub
 if [ "$BRANCH_OR_VERSION" = "dev" ]; then
-    # Use local autocomplete file
+    # Use local autocomplete files
     if [ -f "./$SCRIPT_NAME" ]; then
-        cp "./$SCRIPT_NAME" "$INSTALL_LOCATION"
-        echo "Installed local development version to $INSTALL_LOCATION"
+        cp "./$SCRIPT_NAME" "$INSTALL_DIR/$SCRIPT_NAME"
+        echo "Installed local development version to $INSTALL_DIR/$SCRIPT_NAME"
     else
         echo "ERROR: Local $SCRIPT_NAME file not found."
         exit 1
     fi
+    if [ -f "./autocomplete.sh" ]; then
+        cp "./autocomplete.sh" "$INSTALL_DIR/autocomplete"
+        echo "Installed local development dispatcher to $INSTALL_DIR/autocomplete"
+    else
+        echo "ERROR: Local autocomplete.sh dispatcher file not found."
+        exit 1
+    fi
 else
-    # Download from GitHub
+    # Download shell-specific script from GitHub
     URL="https://raw.githubusercontent.com/closedloop-technologies/autocomplete-sh/${BRANCH_OR_VERSION}/$SCRIPT_NAME"
-    wget -nv -O "$INSTALL_LOCATION" "$URL"
+    wget -nv -O "$INSTALL_DIR/$SCRIPT_NAME" "$URL"
+    # Download dispatcher from GitHub
+    DISPATCHER_URL="https://raw.githubusercontent.com/closedloop-technologies/autocomplete-sh/${BRANCH_OR_VERSION}/autocomplete.sh"
+    wget -nv -O "$INSTALL_DIR/autocomplete" "$DISPATCHER_URL"
 fi
 
-# Install the LLMs
-chmod +x "$INSTALL_LOCATION"
+# Make both scripts executable
+chmod +x "$INSTALL_DIR/$SCRIPT_NAME"
+chmod +x "$INSTALL_DIR/autocomplete"
 
 # Check if jq is installed
 if ! command -v jq > /dev/null 2>&1; then
@@ -87,4 +96,4 @@ if ! command -v _init_completion > /dev/null 2>&1; then
 fi
 
 # Proceed with installation
-"$INSTALL_LOCATION" install
+"$INSTALL_DIR/autocomplete" install
