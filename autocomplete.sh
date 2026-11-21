@@ -1,5 +1,7 @@
 #!/usr/bin/sh
 
+
+
 # Detect the current shell
 detect_shell() {
     if [ -n "$ZSH_VERSION" ]; then
@@ -35,10 +37,11 @@ esac
 _ACSH_SELF=$(command -v autocomplete 2>/dev/null)
 _ACSH_DIR=$(cd "$(dirname "${_ACSH_SELF:-$0}")" && pwd)
 if [ -f "$_ACSH_DIR/$SCRIPT_NAME" ]; then
-    . "$_ACSH_DIR/$SCRIPT_NAME" "$@"
+    # shellcheck source=/dev/null
+    . "$_ACSH_DIR/$SCRIPT_NAME"
 else
     echo "ERROR: Could not find $SCRIPT_NAME. Please reinstall autocomplete.sh."
-    exit 1
+    return 1
 fi
 unset _ACSH_SELF _ACSH_DIR SHELL_TYPE SCRIPT_NAME
 unset -f detect_shell

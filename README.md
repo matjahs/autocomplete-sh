@@ -14,7 +14,7 @@ Use natural language without copying between CoPilot or ChatGPT
 ## Quick Start
 
 ```bash
-wget -qO- https://autocomplete.sh/install.sh | bash
+wget -qO- https://raw.githubusercontent.com/matjahs/autocomplete-sh/main/install.sh | bash
 ```
 
 ## Features
@@ -91,15 +91,9 @@ autocomplete usage
 ### Local Installation
 
 ```bash
-git clone git@github.com:closedloop-technologies/autocomplete-sh.git
-ln -s $PWD/autocomplete.sh $HOME/.local/bin/autocomplete
-. autocomplete.sh install
-```
-
-We can also install the development version from the local file:
-
-```bash
-    ./docs/install.sh dev
+git clone git@github.com:matjahs/autocomplete-sh.git
+cd autocomplete-sh
+./install.sh
 ```
 
 ### Testing
@@ -126,7 +120,7 @@ Contributions and bug fixes are welcome!
 
 The best way to support Autocomplete.sh is to just use it!
 
-- [Just use it!](https://github.com/closedloop-technologies/autocomplete-sh?tab=readme-ov-file#quick-start)
+- [Just use it!](https://github.com/matjahs/autocomplete-sh?tab=readme-ov-file#quick-start)
 - [Share it!](https://x.com/intent/post?text=I+love+autocomplete.sh%21++I+just+press+%3CTAB%3E%3CTAB%3E+to+just+build+quickly+%40JustBuild_ai)
 - Star it!
 
